@@ -2,7 +2,7 @@
  * @Author: 焦江倩 
  * @Date: 2018-12-02 20:16:48 
  * @Last Modified by: 焦江倩
- * @Last Modified time: 2018-12-02 20:47:22
+ * @Last Modified time: 2018-12-03 00:09:52
  */
 
 var gulp = require('gulp');
@@ -24,6 +24,9 @@ var url = require('url');
 var path = require('path');
 
 var fs = require('fs');
+
+var list = require('./mock/data.json');
+console.log(list);
 
 gulp.task('scss', function() {
     return gulp.src('./src/scss/*.scss')
@@ -49,11 +52,19 @@ gulp.task('server', function() {
                     return;
                 }
 
-                pathname = pathname === '/' ? 'index.html' : pathname;
-                var data = fs.readFileSync(path.join(__dirname, 'src', pathname));
-                res.end(data);
+                if (pathname === "/api/list") {
+                    res.end(JSON.stringify({ code: 1, data: list }));
+                } else {
+                    pathname = pathname === '/' ? 'index.html' : pathname;
+                    var data = fs.readFileSync(path.join(__dirname, 'src', pathname));
+                    res.end(data);
+                }
+
+
             }
         }))
 })
 
+
+// 线下环境
 gulp.task('dev', gulp.series('scss', 'server', 'watch'));
