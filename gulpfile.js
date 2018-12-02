@@ -2,7 +2,7 @@
  * @Author: 焦江倩 
  * @Date: 2018-12-02 20:16:48 
  * @Last Modified by: 焦江倩
- * @Last Modified time: 2018-12-03 00:09:52
+ * @Last Modified time: 2018-12-03 00:11:25
  */
 
 var gulp = require('gulp');
@@ -68,3 +68,27 @@ gulp.task('server', function() {
 
 // 线下环境
 gulp.task('dev', gulp.series('scss', 'server', 'watch'));
+
+gulp.task('bCss', function() {
+    return gulp.src('./src/css/*.css')
+        .pipe(minCss())
+        .pipe(gulp.dest('./build/css'))
+})
+
+// gulp.task('bUglify', function() {
+//     return gulp.src(['./src/js/**/*.js', './src/js/libs/*.js'])
+//         .pipe(babel({
+//             presets: ['@babel/env']
+//         }))
+//         .pipe(uglify())
+//         .pipe(gulp.dest('./build/js'))
+// })
+
+gulp.task('copyLibs', function() {
+    return gulp.src('./src/js/libs/*.js')
+        .pipe(gulp.dest('./build/js/libs'))
+})
+
+
+// 线上环境
+gulp.task('build', gulp.parallel('bCss', 'copyLibs'));
